@@ -14,7 +14,7 @@ export default function SearchRepositories() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
+  const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
   const router = useRouter();
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -132,20 +132,22 @@ export default function SearchRepositories() {
         ))}
       </div>
 
-      {repositories.length > 0 && repositories.length < totalCount && (
-        <div className="mt-6 text-center">
-          <Button
-            onClick={handleLoadMore}
-            disabled={loading}
-            variant="outline"
-            data-testid="load-more-button"
-          >
-            {loading ? "Loading..." : "さらに読み込む"}
-          </Button>
-        </div>
-      )}
+      {repositories.length > 0 &&
+        totalCount &&
+        repositories.length < totalCount && (
+          <div className="mt-6 text-center">
+            <Button
+              onClick={handleLoadMore}
+              disabled={loading}
+              variant="outline"
+              data-testid="load-more-button"
+            >
+              {loading ? "Loading..." : "さらに読み込む"}
+            </Button>
+          </div>
+        )}
 
-      {repositories.length === 0 && !loading && query && (
+      {repositories.length === 0 && !loading && query && totalCount === 0 && (
         <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
           リポジトリが見つかりませんでした。別のキーワードで試してください。
         </p>
