@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.3",
@@ -26,6 +28,7 @@
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -35,6 +38,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "msw": "^2.7.3",
     "tailwindcss": "^4",
+    "ts-jest": "^29.2.6",
     "typescript": "^5"
   }
 }
