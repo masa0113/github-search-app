@@ -3,15 +3,14 @@ import Link from "next/link";
 import RepositoryDetail from "@/components/RepositoryDetail";
 
 interface RepositoryDetailPageProps {
-  params: {
+  params: Promise<{
     owner: string;
     repo: string;
-  };
+  }>;
 }
 
-export default function RepositoryDetailPage({
-  params,
-}: RepositoryDetailPageProps) {
+export default async function RepositoryDetailPage(props: RepositoryDetailPageProps) {
+  const params = await props.params;
   const { owner, repo } = params;
 
   return (
