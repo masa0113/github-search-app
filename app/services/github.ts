@@ -36,7 +36,7 @@ export async function searchRepositories(
         headers: {
           Accept: "application/vnd.github.v3+json",
         },
-        next: { revalidate: 60 },
+        next: { revalidate: 60 }, // キャッシュ時間の設定
       }
     );
 
