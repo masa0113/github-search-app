@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import RepositoryDetail from "@/components/RepositoryDetail";
+import RepositoryDetail from "@/components/RepositoryDetail/RepositoryDetail";
 
 interface RepositoryDetailPageProps {
   params: Promise<{
@@ -20,7 +20,7 @@ export default async function RepositoryDetailPage(props: RepositoryDetailPagePr
           href="/"
           className="text-blue-500 hover:underline flex items-center gap-2"
         >
-          <span>&#8592;</span> トップページへ戻る
+          トップページへ戻る
         </Link>
       </div>
 
