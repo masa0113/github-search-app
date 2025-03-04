@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import RepositoryDetail from "@/components/RepositoryDetail";
+import RepositoryDetail from "@/components/RepositoryDetail/RepositoryDetail";
 
 interface RepositoryDetailPageProps {
   params: Promise<{

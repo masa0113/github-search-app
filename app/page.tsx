@@ -1,4 +1,4 @@
-import SearchRepositories from "@/components/SearchRepositories";
+import SearchRepositories from "@/components/SearchRepositories/SearchRepositories";
 
 export default function Home() {
   return (

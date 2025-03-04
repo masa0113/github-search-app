@@ -1,81 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
-import { Repository } from "@/app/services/github";
+import { useSearchRepositories } from "./useSearchRepositories";
+import { useRouter } from "next/navigation";
 
 export default function SearchRepositories() {
-  const [query, setQuery] = useState("");
-  const [repositories, setRepositories] = useState<Repository[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
   const router = useRouter();
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `/api/search?q=${encodeURIComponent(query)}&page=1`
-      );
-
-      if (!response.ok) {
-        throw new Error("検索に失敗しました");
-      }
-
-      const result = await response.json();
-      setRepositories(result.items);
-      setTotalCount(result.total_count);
-      setPage(1);
-    } catch (err) {
-      setError(
-        "リポジトリの検索中にエラーが発生しました。もう一度お試しください。"
-      );
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLoadMore = async () => {
-    if (loading) return;
-
-    setLoading(true);
-
-    try {
-      const response = await fetch(
-        `/api/search?q=${encodeURIComponent(query)}&page=${page + 1}`
-      );
-
-      if (!response.ok) {
-        throw new Error("追加データの取得に失敗しました");
-      }
-
-      const result = await response.json();
-      setRepositories((prev) => [...prev, ...result.items]);
-      setPage((prev) => prev + 1);
-    } catch (err) {
-      setError("追加のリポジトリのロード中にエラーが発生しました。");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRepoClick = (repo: Repository) => {
-    const [owner, repoName] = repo.full_name.split("/");
-    router.push(`/repository/${owner}/${repoName}`);
-  };
+  const { query,
+    setQuery,
+    repositories,
+    loading,
+    error,
+    totalCount,
+    handleSearch,
+    handleLoadMore,
+    handleRepoClick, } = useSearchRepositories(router)
 
   return (
     <>
@@ -115,10 +58,12 @@ export default function SearchRepositories() {
           >
             <CardContent className="p-4 flex items-center gap-4">
               <Avatar className="h-10 w-10">
-                <img
+                <Image
                   src={repo.owner.avatar_url}
                   alt={`${repo.owner.login}'s avatar`}
-                  className="h-full w-full object-cover"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-cover rounded-full"
                 />
               </Avatar>
               <div className="flex-grow">
