@@ -1,75 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Repository } from "@/app/services/github";
+import Image from "next/image";
 
-export default function SearchRepositories() {
+export default function SearchRepositories({
+  onSearch,
+  onLoadMore,
+  repositories,
+  loading,
+  error,
+  totalCount,
+  hasMore,
+  initialQuery = "",
+}: {
+  onSearch: (query: string) => Promise<void>;
+  onLoadMore: () => Promise<void>;
+  repositories: Repository[];
+  loading: boolean;
+  error: string | null;
+  totalCount?: number;
+  hasMore: boolean;
+  initialQuery?: string;
+}) {
   const [query, setQuery] = useState("");
-  const [repositories, setRepositories] = useState<Repository[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
   const router = useRouter();
+
+  // クライアントサイドでのみ実行されるuseEffectで初期値を設定
+  useEffect(() => {
+    if (initialQuery) {
+      setQuery(initialQuery);
+    }
+  }, [initialQuery]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
 
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `/api/search?q=${encodeURIComponent(query)}&page=1`
-      );
-
-      if (!response.ok) {
-        throw new Error("検索に失敗しました");
-      }
-
-      const result = await response.json();
-      setRepositories(result.items);
-      setTotalCount(result.total_count);
-      setPage(1);
-    } catch (err) {
-      setError(
-        "リポジトリの検索中にエラーが発生しました。もう一度お試しください。"
-      );
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLoadMore = async () => {
-    if (loading) return;
-
-    setLoading(true);
-
-    try {
-      const response = await fetch(
-        `/api/search?q=${encodeURIComponent(query)}&page=${page + 1}`
-      );
-
-      if (!response.ok) {
-        throw new Error("追加データの取得に失敗しました");
-      }
-
-      const result = await response.json();
-      setRepositories((prev) => [...prev, ...result.items]);
-      setPage((prev) => prev + 1);
-    } catch (err) {
-      setError("追加のリポジトリのロード中にエラーが発生しました。");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    // URLを更新して検索クエリを保存
+    router.push(`/?q=${encodeURIComponent(query)}`, { scroll: false });
+    await onSearch(query);
   };
 
   const handleRepoClick = (repo: Repository) => {
@@ -115,10 +90,12 @@ export default function SearchRepositories() {
           >
             <CardContent className="p-4 flex items-center gap-4">
               <Avatar className="h-10 w-10">
-                <img
+                <Image
                   src={repo.owner.avatar_url}
                   alt={`${repo.owner.login}'s avatar`}
-                  className="h-full w-full object-cover"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-cover rounded-full"
                 />
               </Avatar>
               <div className="flex-grow">
@@ -132,20 +109,18 @@ export default function SearchRepositories() {
         ))}
       </div>
 
-      {repositories.length > 0 &&
-        totalCount &&
-        repositories.length < totalCount && (
-          <div className="mt-6 text-center">
-            <Button
-              onClick={handleLoadMore}
-              disabled={loading}
-              variant="outline"
-              data-testid="load-more-button"
-            >
-              {loading ? "Loading..." : "さらに読み込む"}
-            </Button>
-          </div>
-        )}
+      {repositories.length > 0 && hasMore && (
+        <div className="mt-6 text-center">
+          <Button
+            onClick={onLoadMore}
+            disabled={loading}
+            variant="outline"
+            data-testid="load-more-button"
+          >
+            {loading ? "Loading..." : "さらに読み込む"}
+          </Button>
+        </div>
+      )}
 
       {repositories.length === 0 && !loading && query && totalCount === 0 && (
         <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
