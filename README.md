@@ -15,14 +15,13 @@ Next.js 14 を使用して作成された GitHub リポジトリ検索アプリ�
 - TypeScript
 - Tailwind CSS
 - shadcn/ui
-- Jest & React Testing Library
+- Vitest & React Testing Library
 
 ## 開発環境のセットアップ
 
 ```bash
 # リポジトリのクローン
 git clone https://github.com/yourusername/github-repo-search.git
-cd github-repo-search
 
 # 依存関係のインストール
 npm install
@@ -34,4 +33,6 @@ npm run dev
 
 ## AI 使用時レポート
 
+- このREADMEの雛形を生成しました
 - コミットメッセージが「first commit」のものに関して、今回のリポジトリを作成するに当たっての init の部分を生成してもらいそのまま使用しました
+- デザインについてもAIに生成してもらい調整する形で実装しております
