@@ -82,7 +82,7 @@ export function RepositoryDetailView({ repository }: RepositoryDetailViewProps) 
                         className="text-blue-500 hover:underline"
                         data-testid="repository-link"
                     >
-                        GitHubで表示 &#8594;
+                        GitHubで表示
                     </a>
                 </div>
             </CardContent>
