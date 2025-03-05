@@ -11,7 +11,7 @@ Next.js 15 を使用して作成された GitHub リポジトリ検索アプリ�
 
 ## 技術スタック
 
-- Next.js 14 (App Router)
+- Next.js 15 (App Router)
 - TypeScript
 - Tailwind CSS
 - shadcn/ui
