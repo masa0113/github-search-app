@@ -69,9 +69,9 @@ describe('SearchRepositories', () => {
       />
     );
 
-    expect(screen.getByTestId('search-input')).toBeInTheDocument();
-    expect(screen.getByTestId('search-button')).toBeInTheDocument();
-    expect(screen.getByTestId('repository-list')).toBeInTheDocument();
+    expect(document.contains(screen.getByTestId('search-input'))).toBe(true);
+    expect(document.contains(screen.getByTestId('search-button'))).toBe(true);
+    expect(document.contains(screen.getByTestId('repository-list'))).toBe(true);
   });
 
   it('検索が実行されるとonSearchが呼ばれること', async () => {
